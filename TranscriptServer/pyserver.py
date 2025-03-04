@@ -18,7 +18,6 @@ def receive_url():
         data = request.json
         target_url = data.get('target_url')
         response_format = data.get('format', 'json')
-        
         if not target_url:
             print("Error: No URL provided", flush=True)
             return jsonify({"error": "No URL provided"}), 399

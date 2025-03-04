@@ -18,8 +18,8 @@ const isDev = !app.isPackaged; // 개발 모드 감지
 // 로그 파일 경로 (예: 사용자 데이터 폴더 내에 app.log 파일 생성)
 
 const scriptPath = isDev
-  ? path.join(__dirname, "pyserver.py")
-  : path.join(process.resourcesPath, "pyserver.py");
+  ? path.join(__dirname, "TranscriptServer/pyserver.py")
+  : path.join(process.resourcesPath, "TransscriptServer/pyserver.py");
 
 const pythonPath = isDev
   ? path.join(__dirname, ".venv", "Scripts", "python.exe") // 개발 환경
@@ -79,13 +79,13 @@ app.whenReady().then(() => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    icon: path.join(__dirname, "icon.ico"),
+    icon: path.join(__dirname, "assets/icon.ico"),
     webPreferences: {
       nodeIntegration: true,
     },
   });
 
-  mainWindow.loadFile("index.html");
+  mainWindow.loadFile("Frontend/index.html");
 
   app.on("window-all-closed", () => {
     if (pythonProcess) {
