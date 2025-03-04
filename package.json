@@ -1,0 +1,58 @@
+{
+  "name": "electron-todo-app",
+  "version": "1.0.0",
+  "description": "유튜브 자막 추출",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "dist": "electron-builder",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "keywords": [],
+  "author": "JaeuChoi",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.7.0",
+    "@electron-forge/maker-deb": "^7.7.0",
+    "@electron-forge/maker-rpm": "^7.7.0",
+    "@electron-forge/maker-squirrel": "^7.7.0",
+    "@electron-forge/maker-zip": "^7.7.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.7.0",
+    "@electron-forge/plugin-fuses": "^7.7.0",
+    "electron": "^34.2.0",
+    "electron-builder": "^25.1.8",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "build": {
+    "appId": "com.example.todo",
+    "productName": "유튜브자막추출기",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "extraResources": [
+      "pyserver.py",
+      "trans.py",
+      "findTitle.py",
+      {
+        "from": ".venv",
+        "to": ".venv"
+      }
+    ]
+  },
+  "files": [
+    "pyserver.py",
+    "trans.py",
+    "findTitle.py",
+    ".venv/**/*",
+    "node_modules/**/*",
+    "index.html",
+    "main.js",
+    "index.js"
+  ]
+}
