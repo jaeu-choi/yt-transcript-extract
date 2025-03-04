@@ -14,13 +14,6 @@
   "author": "JaeuChoi",
   "license": "ISC",
   "devDependencies": {
-    "@electron-forge/cli": "^7.7.0",
-    "@electron-forge/maker-deb": "^7.7.0",
-    "@electron-forge/maker-rpm": "^7.7.0",
-    "@electron-forge/maker-squirrel": "^7.7.0",
-    "@electron-forge/maker-zip": "^7.7.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.7.0",
-    "@electron-forge/plugin-fuses": "^7.7.0",
     "electron": "^34.2.0",
     "electron-builder": "^25.1.8",
     "electron-reload": "^2.0.0-alpha.1"
@@ -35,24 +28,24 @@
       "target": "nsis",
       "icon": "icon.ico"
     },
+    "files": [
+      "node_modules/**/*",
+      "Frontend/**/*",
+      "main.js"
+    ],
     "extraResources": [
-      "pyserver.py",
-      "trans.py",
-      "findTitle.py",
       {
-        "from": ".venv",
-        "to": ".venv"
+        "from": "TranscriptServer",
+        "to": "TranscriptServer"
+      },
+      {
+        "from": ".venv/Lib/site-packages",
+        "to": "python-packages"
+      },
+      {
+        "from": ".venv/Scripts/python.exe",
+        "to": "python.exe"
       }
     ]
-  },
-  "files": [
-    "pyserver.py",
-    "trans.py",
-    "findTitle.py",
-    ".venv/**/*",
-    "node_modules/**/*",
-    "index.html",
-    "main.js",
-    "index.js"
-  ]
+  }
 }
