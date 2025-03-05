@@ -15,20 +15,25 @@ const isDev = !app.isPackaged;
 //   ? path.join(__dirname, ".venv", "Scripts", "python.exe") // 개발 환경
 //   : path.join(process.resourcesPath, "python.exe"); // 빌드 후 환경
 
-const logFilePath = path.join(app.getPath("userData"), "python-log.txt");
+//파일경로 여기로
+const logFilePath = path.join(app.getPath("userData"), "python-log2.txt");
+// const logFilePath = path.join(__dirname, "python-log.txt");
 
-const pythonPath = path.join(process.resourcesPath, "python.exe");
-const scriptPath = path.join(
-  process.resourcesPath,
-  "TranscriptServer",
-  "pyserver.py"
-);
+// const pythonPath = path.join(process.resourcesPath, "python.exe");
+const pythonPath = isDev
+  ? path.join(__dirname, ".venv", "Scripts", "python.exe")
+  : path.join(process.resourcesPath, ".venv", "Scripts", "python.exe");
+const scriptPath = isDev
+  ? path.join(__dirname, "TranscriptServer", "pyserver.py")
+  : path.join(process.resourcesPath, "TranscriptServer", "pyserver.py");
 app.whenReady().then(() => {
   // 🔥 Python 환경 변수 설정
   const pythonEnv = { ...process.env };
   if (!isDev) {
     // Python 가상 환경의 site-packages 경로 추가
-    const sitePkgPath = path.join(process.resourcesPath, "python-packages");
+    const sitePkgPath = isDev
+      ? path.join(__dirname, ".venv", "Lib", "site-packages")
+      : path.join(process.resourcesPath, "python-packages");
     pythonEnv.PYTHONPATH = sitePkgPath;
 
     // 로그 기록
@@ -49,6 +54,7 @@ app.whenReady().then(() => {
       cwd: path.dirname(scriptPath),
       env: pythonEnv,
       detached: true,
+      windowsHide: true, // 추가: 콘솔 창 숨김
       stdio: ["ignore", "pipe", "pipe"], // stdout, stderr 활성화
     });
 

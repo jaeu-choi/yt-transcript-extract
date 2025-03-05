@@ -26,7 +26,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "icon.ico"
+      "icon": "assets/icon.ico"
     },
     "files": [
       "node_modules/**/*",
@@ -40,11 +40,15 @@
       },
       {
         "from": ".venv/Lib/site-packages",
-        "to": "python-packages"
+        "to": "python/Lib/site-packages"
       },
       {
         "from": ".venv/Scripts/python.exe",
         "to": "python.exe"
+      },
+      {
+        "from": ".venv",
+        "to": ".venv"
       }
     ]
   }
