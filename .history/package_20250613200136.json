@@ -1,0 +1,21 @@
+{
+  "name": "you-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.example.you-app",
+    "mac": {
+      "target": ["dmg","zip"],
+      "arch": ["arm64"],
+      "icon":"assets/icon.icns"        // M1 전용 빌드
+    }
+  },
+  "devDependencies": {
+    "electron": "^34.2.0",
+    "electron-builder": "^23.0.0"
+  }
+}

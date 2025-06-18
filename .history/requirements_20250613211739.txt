@@ -1,0 +1,6 @@
+flask
+flask_cors
+requests
+youtube_transcript_api
+beautifulsoup4
+emoji

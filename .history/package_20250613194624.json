@@ -1,0 +1,131 @@
+{
+  "name": "electron-todo-app",
+  "version": "1.0.0",
+  "description": "유튜브 자막 추출",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "dist": "electron-builder",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "build": "electron-builder --publish=never",
+    "build:mac": "electron-builder --mac --publish=never",
+    "build:win": "electron-builder --win --publish=never",
+    "clean": "rm -rf dist node_modules/.cache",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "keywords": [
+    "youtube",
+    "transcript",
+    "subtitle",
+    "extract"
+  ],
+  "author": "JaeuChoi",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^34.2.0",
+    "electron-builder": "^25.1.8",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "build": {
+    "appId": "com.example.youtube-transcript",
+    "productName": "유튜브자막추출기",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "compression": "maximum",
+    "mac": {
+      "target": {
+        "target": "dmg",
+        "arch": [
+          "arm64"
+        ]
+      },
+      "category": "public.app-category.utilities",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "minimumSystemVersion": "11.0.0",
+      "icon": "assets/icon.ico"
+    },
+    "win": {
+      "target": {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      },
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": {
+        "target": "AppImage",
+        "arch": [
+          "x64"
+        ]
+      },
+      "category": "Utility",
+      "icon": "assets/icon.ico"
+    },
+    "files": [
+      "node_modules/**/*",
+      "Frontend/**/*",
+      "main.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "TranscriptServer",
+        "to": "TranscriptServer",
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**/*",
+          "!**/*.pyc",
+          "!**/*.pyo",
+          "!**/.pytest_cache/**/*",
+          "!**/test_*.py",
+          "!**/*_test.py"
+        ]
+      },
+      {
+        "from": ".venv",
+        "to": "python",
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**/*",
+          "!**/*.pyc",
+          "!**/*.pyo",
+          "!**/test/**/*",
+          "!**/tests/**/*",
+          "!**/.pytest_cache/**/*",
+          "!**/pip/**/*",
+          "!**/setuptools/**/*",
+          "!**/wheel/**/*"
+        ]
+      }
+    ],
+    "extraMetadata": {
+      "name": "youtube-transcript-extractor"
+    },
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "publish": null,
+    "buildDependenciesFromSource": false,
+    "nodeGypRebuild": false,
+    "npmRebuild": false
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/yt-transcript-extract.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/yt-transcript-extract/issues"
+  },
+  "homepage": "https://github.com/your-username/yt-transcript-extract#readme"
+}

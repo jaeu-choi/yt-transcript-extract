@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Transcript Extractor</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>YouTube Transcript Extractor</h1>
+
+      <!-- 서버 상태 표시 -->
+      <div class="status-bar">
+        <span id="server-status" style="color: orange"> 서버 연결 중... </span>
+      </div>
+
+      <div class="input-section">
+        <label for="url-input-form">YouTube URL을 입력하세요</label>
+        <input
+          type="url"
+          id="url-input-form"
+          placeholder="https://www.youtube.com/watch?v=..."
+          required
+        />
+        <div class="button-group">
+          <button id="submit-btn">자막 추출</button>
+          <button id="clear-btn">Clear</button>
+        </div>
+      </div>
+
+      <!-- 로딩 표시 -->
+      <div id="loading" style="display: none">
+        <div class="loading-spinner"></div>
+        <p>자막을 추출하고 있습니다. 잠시만 기다려주세요...</p>
+      </div>
+
+      <!-- 결과 표시 -->
+      <div id="result">
+        <textarea
+          id="codeArea"
+          rows="20"
+          cols="100"
+          placeholder="추출된 자막이 여기에 표시됩니다..."
+        ></textarea>
+        <button onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+      </div>
+
+      <!-- 사용법 안내 -->
+      <div class="help-section">
+        <h3>✨ 사용법</h3>
+        <ol>
+          <li>YouTube 동영상 페이지에서 URL을 복사합니다</li>
+          <li>위의 입력란에 URL을 붙여넣습니다</li>
+          <li>'자막 추출' 버튼을 클릭합니다</li>
+          <li>자막이 추출되면 클립보드로 복사할 수 있습니다</li>
+        </ol>
+
+        <h3>🎯 지원 형식</h3>
+        <ul>
+          <li>한국어 자막 (우선 순위)</li>
+          <li>영어 자막 (한국어가 없는 경우)</li>
+          <li>자동 생성 자막 포함</li>
+          <li>다양한 YouTube URL 형식 지원</li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>

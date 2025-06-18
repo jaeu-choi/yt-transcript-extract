@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- 네트워크 접근 권한 (YouTube API 호출용) -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    
+    <!-- 네트워크 서버 권한 (Python Flask 서버용) -->
+    <key>com.apple.security.network.server</key>
+    <true/>
+    
+    <!-- 파일 시스템 읽기/쓰기 권한 -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    
+    <!-- 임시 파일 생성 권한 -->
+    <key>com.apple.security.temporary-exception.files.absolute-path.read-write</key>
+    <array>
+        <string>/tmp/</string>
+        <string>/var/tmp/</string>
+    </array>
+    
+    <!-- 다운로드 폴더 접근 권한 -->
+    <key>com.apple.security.files.downloads.read-write</key>
+    <true/>
+    
+    <!-- 사용자 홈 디렉토리 접근 권한 -->
+    <key>com.apple.security.temporary-exception.files.home-relative-path.read-write</key>
+    <array>
+        <string>Downloads/</string>
+        <string>Desktop/</string>
+        <string>Documents/</string>
+    </array>
+    
+    <!-- JIT 컴파일 권한 (Python 실행용) -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+    
+    <!-- 하위 프로세스 실행 권한 (Python 프로세스용) -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+    
+    <!-- 동적 라이브러리 로딩 권한 -->
+    <key>com.apple.security.cs.allow-dyld-environment-variables</key>
+    <true/>
+    
+    <!-- 디버깅 권한 (개발 중에만 필요) -->
+    <key>com.apple.security.cs.debugger</key>
+    <true/>
+    
+    <!-- 하드닝된 런타임에서 예외 허용 -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+</dict>
+</plist>
