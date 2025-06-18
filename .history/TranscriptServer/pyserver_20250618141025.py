@@ -82,18 +82,17 @@ def receive_url():
         data = request.json
         target_url = data.get('target_url')
         response_format = data.get('format', 'json')
-        language_code = data.get('language_code')
-        include_timestamp = data.get('include_timestamp', True)  # 타임스탬프 포함 여부 (기본값: True)
-
-        print(f"[DEBUG] Received request: {target_url}, language: {language_code}, timestamp: {include_timestamp}", flush=True)
-
+        language_code = data.get('language_code')  # 새로 추가된 파라미터
+        
+        print(f"[DEBUG] Received request: {target_url}, language: {language_code}", flush=True)
+        
         if not target_url:
             print("Error: No URL provided", flush=True)
             return jsonify({"error": "No URL provided"}), 400
 
         # URL 수신 로그
         print(f"Received URL: {target_url}", flush=True)
-
+        
         # 유튜브 제목 스크래핑
         try:
             video_title = findTitle.get_youtube_title_scraping(target_url)
@@ -116,29 +115,27 @@ def receive_url():
             if language_code:
                 # 특정 언어로 자막 다운로드
                 fileName, sub = trans.download_subtitles_by_language(
-                    video_id,
-                    language_code,
-                    file_format="txt",
-                    video_title=video_title,
-                    include_timestamp=include_timestamp  # 타임스탬프 옵션 전달
+                    video_id, 
+                    language_code, 
+                    file_format="txt", 
+                    video_title=video_title
                 )
                 print(f"Downloaded subtitles for language {language_code}", flush=True)
             else:
                 # 기존 방식 (한국어 > 영어 우선순위)
                 fileName, sub = trans.download_subtitles(
-                    video_id,
-                    file_format="txt",
-                    video_title=video_title,
-                    include_timestamp=include_timestamp  # 타임스탬프 옵션 전달
+                    video_id, 
+                    file_format="txt", 
+                    video_title=video_title
                 )
                 print(f"Downloaded subtitles with default priority", flush=True)
-
+                
             if fileName is None:
                 print(f"[ERROR] Subtitle download failed: {sub}", flush=True)
                 return jsonify({"error": f"Subtitle extraction failed: {sub}"}), 500
-
+                
             print(f"Downloaded subtitles successfully. Length: {len(sub)}", flush=True)
-
+            
         except Exception as e:
             print(f"Error in download_subtitles: {e}", flush=True)
             return jsonify({"error": f"Failed to download subtitles: {str(e)}"}), 500
@@ -147,8 +144,7 @@ def receive_url():
         if response_format == 'json':
             response_data = {
                 "subTitles": sub,
-                "language": language_code if language_code else "auto",
-                "include_timestamp": include_timestamp
+                "language": language_code if language_code else "auto"
             }
             return jsonify(response_data), 200
         elif response_format == 'txt':

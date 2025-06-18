@@ -5,8 +5,8 @@ let currentVideoUrl = "";
 
 // 로딩 상태 표시/숨김
 function showLoading(
-  show,
-  message = "자막을 추출하고 있습니다. 잠시만 기다려주세요..."
+    show,
+    message = "자막을 추출하고 있습니다. 잠시만 기다려주세요..."
 ) {
   const loading = document.getElementById("loading");
   const loadingMessage = document.getElementById("loading-message");
@@ -45,13 +45,15 @@ function showLanguageSelection(show) {
 }
 
 // 결과 헤더 업데이트
-function updateResultHeader(show, languageName = "") {
+function updateResultHeader(show, languageName = "", includeTimestamp = false) {
   const resultHeader = document.getElementById("result-header");
   const currentLanguage = document.getElementById("current-language");
 
   if (show && languageName) {
-    resultHeader.style.display = "block";
-    currentLanguage.textContent = `언어: ${languageName}`;
+    resultHeader.style.display = "flex";
+    resultHeader.style.alignItems = "center";
+    const timestampText = includeTimestamp ? " (타임스탬프 포함)" : " (텍스트만)";
+    currentLanguage.textContent = `언어: ${languageName}${timestampText}`;
   } else {
     resultHeader.style.display = "none";
   }
@@ -126,11 +128,11 @@ async function checkServerConnection() {
     const timeoutId = setTimeout(() => controller.abort(), 5000);
 
     const response = await fetch(
-      `http://127.0.0.1:${currentServerPort}/health`,
-      {
-        signal: controller.signal,
-        cache: "no-cache",
-      }
+        `http://127.0.0.1:${currentServerPort}/health`,
+        {
+          signal: controller.signal,
+          cache: "no-cache",
+        }
     );
 
     clearTimeout(timeoutId);
@@ -156,7 +158,7 @@ async function getAvailableLanguages(url) {
     const isConnected = await checkServerConnection();
     if (!isConnected) {
       throw new Error(
-        "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요."
+          "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요."
       );
     }
 
@@ -166,16 +168,16 @@ async function getAvailableLanguages(url) {
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const response = await fetch(
-      `http://127.0.0.1:${currentServerPort}/get-languages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ target_url: url }),
-        signal: controller.signal,
-      }
+        `http://127.0.0.1:${currentServerPort}/get-languages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ target_url: url }),
+          signal: controller.signal,
+        }
     );
 
     clearTimeout(timeoutId);
@@ -191,12 +193,12 @@ async function getAvailableLanguages(url) {
     if (data.languages && data.languages.length > 0) {
       updateLanguageSelect(data.languages);
       updateServerStatus(
-        "언어 목록을 가져왔습니다. 언어를 선택해주세요.",
-        "green"
+          "언어 목록을 가져왔습니다. 언어를 선택해주세요.",
+          "green"
       );
       return true;
     } else {
-      throw new Error("사용 가능한 한국어 또는 영어 자막이 없습니다.");
+      throw new Error("사용 가능한 자막이 없습니다.");
     }
   } catch (error) {
     console.error("언어 목록 가져오기 오류:", error);
@@ -218,7 +220,9 @@ async function getAvailableLanguages(url) {
 // 선택된 언어로 자막 추출
 async function extractSubtitles() {
   const languageSelect = document.getElementById("language-select");
+  const timestampCheckbox = document.getElementById("include-timestamp");
   const selectedLanguage = languageSelect.value;
+  const includeTimestamp = timestampCheckbox.checked;
 
   if (!selectedLanguage) {
     alert("언어를 선택해주세요.");
@@ -231,12 +235,13 @@ async function extractSubtitles() {
   }
 
   const selectedLangInfo = availableLanguages.find(
-    (lang) => lang.code === selectedLanguage
+      (lang) => lang.code === selectedLanguage
   );
 
+  const timestampText = includeTimestamp ? " (타임스탬프 포함)" : " (텍스트만)";
   showLoading(
-    true,
-    `${selectedLangInfo.display_name} 자막을 추출하고 있습니다...`
+      true,
+      `${selectedLangInfo.display_name}${timestampText} 자막을 추출하고 있습니다...`
   );
   updateServerStatus("자막을 추출하고 있습니다...", "orange");
   updateButtonState("extract-btn", false, "추출 중...");
@@ -245,30 +250,31 @@ async function extractSubtitles() {
     const isConnected = await checkServerConnection();
     if (!isConnected) {
       throw new Error(
-        "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요."
+          "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요."
       );
     }
 
-    console.log(`📡 Extracting subtitles for language: ${selectedLanguage}`);
+    console.log(`📡 Extracting subtitles for language: ${selectedLanguage}, timestamp: ${includeTimestamp}`);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     const response = await fetch(
-      `http://127.0.0.1:${currentServerPort}/submit-url`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          target_url: currentVideoUrl,
-          format: "json",
-          language_code: selectedLanguage,
-        }),
-        signal: controller.signal,
-      }
+        `http://127.0.0.1:${currentServerPort}/submit-url`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            target_url: currentVideoUrl,
+            format: "json",
+            language_code: selectedLanguage,
+            include_timestamp: includeTimestamp  // 타임스탬프 포함 여부 추가
+          }),
+          signal: controller.signal,
+        }
     );
 
     clearTimeout(timeoutId);
@@ -284,7 +290,7 @@ async function extractSubtitles() {
     const textBox = document.getElementById("codeArea");
     if (data.subTitles) {
       textBox.value = data.subTitles;
-      updateResultHeader(true, selectedLangInfo.display_name);
+      updateResultHeader(true, selectedLangInfo.display_name, includeTimestamp);
       updateServerStatus("자막 추출 완료!", "green");
     } else if (data.error) {
       textBox.value = `오류: ${data.error}`;
@@ -317,33 +323,33 @@ async function extractSubtitles() {
 
 // 언어 확인 버튼 이벤트 리스너
 document
-  .getElementById("check-languages-btn")
-  .addEventListener("click", async function (event) {
-    event.preventDefault();
+    .getElementById("check-languages-btn")
+    .addEventListener("click", async function (event) {
+      event.preventDefault();
 
-    const url = document.getElementById("url-input-form").value.trim();
-    if (!url) {
-      alert("유튜브 URL을 입력해주세요.");
-      return;
-    }
+      const url = document.getElementById("url-input-form").value.trim();
+      if (!url) {
+        alert("유튜브 URL을 입력해주세요.");
+        return;
+      }
 
-    // 간단한 YouTube URL 검증
-    if (!url.includes("youtube.com/watch") && !url.includes("youtu.be/")) {
-      alert("올바른 유튜브 URL을 입력해주세요.");
-      return;
-    }
+      // 간단한 YouTube URL 검증
+      if (!url.includes("youtube.com/watch") && !url.includes("youtu.be/")) {
+        alert("올바른 유튜브 URL을 입력해주세요.");
+        return;
+      }
 
-    currentVideoUrl = url;
-    await getAvailableLanguages(url);
-  });
+      currentVideoUrl = url;
+      await getAvailableLanguages(url);
+    });
 
 // 자막 추출 버튼 이벤트 리스너
 document
-  .getElementById("extract-btn")
-  .addEventListener("click", async function (event) {
-    event.preventDefault();
-    await extractSubtitles();
-  });
+    .getElementById("extract-btn")
+    .addEventListener("click", async function (event) {
+      event.preventDefault();
+      await extractSubtitles();
+    });
 
 // 클립보드 복사 함수
 function copyToClipboard() {
@@ -372,6 +378,10 @@ document.getElementById("clear-btn").addEventListener("click", () => {
   languageSelect.selectedIndex = 0;
   updateButtonState("extract-btn", false, "자막 추출");
 
+  // 타임스탬프 체크박스 초기화 (기본값: 체크됨)
+  const timestampCheckbox = document.getElementById("include-timestamp");
+  timestampCheckbox.checked = true;
+
   if (isServerReady) {
     updateServerStatus(`서버 연결됨 (포트: ${currentServerPort})`, "green");
   } else {
@@ -396,8 +406,8 @@ window.addEventListener("load", () => {
       if (!isConnected) {
         console.warn("⚠️ Server connection lost");
         updateServerStatus(
-          `서버 연결 끊김 (포트: ${currentServerPort})`,
-          "red"
+            `서버 연결 끊김 (포트: ${currentServerPort})`,
+            "red"
         );
         updateButtonState("check-languages-btn", false, "서버 연결 끊김");
         isServerReady = false;
